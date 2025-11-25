@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ausharp", "ausharp\ausharp.csproj", "{8A59BD2E-3877-4D85-BE26-AC9EE5784316}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ausharp.test", "ausharp.test\ausharp.test.csproj", "{6F21F461-D92E-4E32-B840-F72B1896A9CD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8A59BD2E-3877-4D85-BE26-AC9EE5784316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A59BD2E-3877-4D85-BE26-AC9EE5784316}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A59BD2E-3877-4D85-BE26-AC9EE5784316}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A59BD2E-3877-4D85-BE26-AC9EE5784316}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F21F461-D92E-4E32-B840-F72B1896A9CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F21F461-D92E-4E32-B840-F72B1896A9CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F21F461-D92E-4E32-B840-F72B1896A9CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F21F461-D92E-4E32-B840-F72B1896A9CD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
