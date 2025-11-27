@@ -33,6 +33,16 @@ public class FlowTest
         res = res.MapOr(x => x, "Another error");
         Assert.Equal("Number is odd", res.UnwrapErr());
 
+        res = Flows.RefVal(42d).MapOr(x => (x.Val * 2d).RefVal(), "Unexpected error");
+        Assert.True(res.IsVal);
+        Assert.Equal(42d * 2d, res.UnwrapVal().Val);
+        
+        var resString = res
+            .Handle((InvalidOperationException e) => e.Message)
+            .MapOr<Value<double>, string>(_ => throw new InvalidOperationException("message"), "Unexpected error");
+        
+        Assert.True(resString.IsErr);
+        Assert.Equal("message",  resString.UnwrapErr());
     }
 
     [Fact]
@@ -68,6 +78,19 @@ public class FlowTest
         result.LogErrorIfAny(logger);
         Assert.Single(errors);
         Assert.Equal("Divide by zero", errors.First());
+
+        var ctx = new FlowContext();
+        var checkError = Flow<string>.Err("error", ctx);
+        checkError = checkError.MapDispose(s => s, s => new FileStream(s, FileMode.Open));
+        Assert.True(ReferenceEquals(ctx, checkError.Context)); // check that context wasn't lost
+
+        var checkException = Flow<string>.Val("check_exception_unavailable_file_name", ctx);
+        checkException = checkException
+            .Handle((FileNotFoundException e) => e.Message)
+            .MapDispose(s => s, s => new FileStream(s, FileMode.Open));
+        
+        Assert.True(checkException.IsErr);
+        Assert.True(ReferenceEquals(ctx, checkException.Context));
     }
 
     [Fact]
@@ -134,6 +157,20 @@ public class FlowTest
 
         result = result.Bind<string, string>(_ => throw new NullReferenceException());
         Assert.Equal("Divide by zero", result.UnwrapErr());
+
+        var ctx = new FlowContext();
+        var exceptionTest = Flow<string>.Val("test", ctx);
+        exceptionTest = exceptionTest
+            .Handle((InvalidEnumArgumentException e) => e.Message)
+            .Bind<string, string>(_ => throw new InvalidEnumArgumentException());
+        
+        Assert.True(exceptionTest.IsErr);
+        Assert.True(ReferenceEquals(ctx, exceptionTest.Context));
+        
+        var _ = Flow<string>.Val("test", ctx)
+            .Bind(_ => new DisposableDummy().Flow());
+        
+        Assert.Single(ctx.GetDisposables());
     }
 
     [Fact]
@@ -224,5 +261,32 @@ public class FlowTest
                 Assert.True(false);
             }
         });
+    }
+
+    [Fact]
+    public void TestDisposableException()
+    {
+        var disposable = new DisposableDummy();
+        disposable.DisposeAction = () => throw new DirectoryNotFoundException();
+
+        using (var result = Flows.Val(None.Value).Map(_ => disposable))
+        {
+            Assert.True(result.IsVal);
+        }
+        
+        // Shouldn't throw
+        Assert.True(true);
+    }
+
+    [Fact]
+    public void TestHandleAll()
+    {
+        var result = Flows.Val(None.Value)
+            .HandleAll()
+            .Map<None, None>(_ => throw new InvalidOperationException())
+            .PopHandler();
+        
+        Assert.True(result.IsErr);
+        Assert.Empty(result.Context.Handlers);
     }
 }

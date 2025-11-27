@@ -12,6 +12,7 @@ public sealed class Flow<TSubj> : IDisposable
     public FlowContext Context { get; }
 
     // This allows to construct error Flow w/o naming its type parameters explicitly
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public Flow(string error, FlowContext? context = null)
     {
 #if DEBUG
