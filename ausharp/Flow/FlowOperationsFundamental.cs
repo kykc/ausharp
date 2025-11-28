@@ -118,8 +118,6 @@ public static class FlowOperationsFundamental
             return new(subj.Context.ToErrorString(ex).Item1, subj.Context);
         }
     }
-    
-    
 
     public static Flow<TSubj> SideEffectIf<TSubj>(this Flow<TSubj> subj, Func<TSubj, FlowContext, bool> condition, Action<TSubj, FlowContext> action)
         where TSubj : class

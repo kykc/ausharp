@@ -122,4 +122,10 @@ public static class FlowOperationsAdditional
 
         return true;
     }
+
+    public static Flow<TSubj> SideEffectIf<TSubj>(this Flow<TSubj> subj, Func<TSubj, bool> condition, Action<TSubj> action)
+        where TSubj : class
+    {
+        return subj.SideEffectIf((s, _) => condition(s), (s, _) => action(s));
+    }
 }
